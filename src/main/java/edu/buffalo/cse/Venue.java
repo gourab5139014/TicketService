@@ -3,23 +3,20 @@ package edu.buffalo.cse;
 
 
 public class Venue {
-    private enum SeatStatus{
-        FREE, HOLD, BOOKED
-    }
     private String name;
     private int availableSeats;
     private int rows;
     private int columns;
 
-    private SeatStatus[][] seats;
+    private Seat[][] seats;
 
     public Venue(String name, int rows, int columns) {
         this.name = name;
         this.availableSeats = rows * columns;
-        this.seats = new SeatStatus[rows][columns];
+        this.seats = new Seat[rows][columns];
         for(int i=0; i<rows;i++) {
             for (int j = 0; j < columns; j++) {
-                this.seats[i][j] = SeatStatus.FREE;
+                this.seats[i][j] = new Seat();
             }
         }
     }
