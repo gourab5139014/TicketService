@@ -1,0 +1,8 @@
+Entities and their purposes
+===========================
+
+* Venue
+
+* TicketService : Interface for exposing the Venue's ticketing system
+
+* SeatHold : Group of seats being help for a specific user in a venue
