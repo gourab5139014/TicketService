@@ -1,11 +1,13 @@
 package edu.buffalo.cse;
 
+
+
 public class Venue {
     private enum SeatStatus{
         FREE, HOLD, BOOKED
     }
     private String name;
-    private long availableSeats;
+    private int availableSeats;
     private int rows;
     private int columns;
 
@@ -22,9 +24,21 @@ public class Venue {
         }
     }
 
+    public int getAvailableSeats() {
+        return this.availableSeats;
+    }
+
     public Boolean hasSeats(int requestedSeats){
         Boolean ifHasSeats = true;
         // Implement method here
         return ifHasSeats;
+    }
+
+    public Boolean reserveSeats(int seatHoldId, String customerEmail) {
+        throw new UnsupportedOperationException("reserveSeats Method not implemented yet");
+    }
+
+    public SeatHold holdSeats(int numSeats, String customerEmail) {
+        throw new UnsupportedOperationException("holdSeats Method not implemented yet");
     }
 }
