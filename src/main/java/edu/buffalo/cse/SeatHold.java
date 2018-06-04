@@ -5,11 +5,13 @@ import java.time.Instant;
 public class SeatHold {
     Instant heldAt;
     String customerEmail;
+    long expireAfterSeconds;
     int rowIndex;
     int columnIndex;
     int numberofSeats;
 
-    public SeatHold(){
+    public SeatHold(long expireAfterSeconds){
+        this.expireAfterSeconds = expireAfterSeconds;
         this.heldAt = Instant.now();
     }
 
@@ -18,6 +20,10 @@ public class SeatHold {
     }
 
     public void reserve(){
-        
+
+    }
+
+    public Boolean isActive(){
+        return Instant.now().minusSeconds(expireAfterSeconds).isBefore(this.heldAt) || Instant.now().minusSeconds(expireAfterSeconds).equals(this.heldAt);
     }
 }
