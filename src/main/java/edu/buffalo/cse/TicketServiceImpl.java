@@ -21,19 +21,25 @@ public class TicketServiceImpl implements TicketService {
     @Override
     public SeatHold findAndHoldSeats(int numSeats, String customerEmail) {
         //TODO Introduce exceptions about VenueNotInitialized, SoldOut, NoContinuousSeats, Validation of customerEmail
+        SeatHold sh = null;
         try {
-            SeatHold sh = v.holdSeats(numSeats, customerEmail);
+            sh = v.holdSeats(numSeats, customerEmail);
         } catch (Exception e) {
             e.printStackTrace(); //TODO Do custom exception
         }
-        return null;
+        return sh;
     }
 
     @Override
-    public String reserveSeats(int seatHoldId, String customerEmail){
-        //TODO Introduce exceptions HoldExpired, VenueNotInitialized, SoldOut, Validation of customerEmail
+    public String reserveSeats(int seatHoldId, String customerEmail) {
+
         String confirmationCode = "";
-        Boolean success = v.reserveSeats(seatHoldId, customerEmail);
+        Boolean success = null;
+        try {
+            success = v.reserveSeats(seatHoldId, customerEmail);
+        } catch (Exception e) {  //TODO Introduce exceptions HoldExpired, VenueNotInitialized, SoldOut, Validation of customerEmail
+            e.printStackTrace();
+        }
         if(success){
             confirmationCode = this._generateConfirmationCode(4);
         }

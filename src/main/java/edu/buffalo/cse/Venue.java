@@ -39,8 +39,26 @@ public class Venue {
         return this.getAvailableSeats() > 0;
     }
 
-    public Boolean reserveSeats(int seatHoldId, String customerEmail) {
-        throw new UnsupportedOperationException("reserveSeats Method not implemented yet");
+    public Boolean reserveSeats(int seatHoldId, String customerEmail) throws Exception {
+        Boolean done = false;
+        if(this.seatHolds.containsKey(customerEmail)){
+            List<SeatHold> customerSeatHolds = this.seatHolds.get(customerEmail);
+            List<SeatHold> removeSeatHolds = new ArrayList<>();
+            for(SeatHold csh:customerSeatHolds){
+                if(csh.getSeatHoldId() == seatHoldId && csh.isActive()){
+                    for(int k = 0; k < csh.getNumberOfSeats(); k++){
+                        seats[csh.getRowIndex()][csh.getColumnIndex()].setStatusBooked();
+                    }
+                    removeSeatHolds.add(csh);
+                    break;
+                }
+            }
+            customerSeatHolds.removeAll(removeSeatHolds);
+
+        }else{
+            throw new Exception(customerEmail + " doesn't have a seathold already in  Venue "+name); //TODO Make a NoCustomerExists Exception
+        }
+        return done;
     }
 
     public SeatHold holdSeats(int numSeats, String customerEmail) throws Exception {
@@ -121,6 +139,7 @@ public class Venue {
             for(SeatHold csh: customerSeatHolds){
                 if(!csh.isActive()) {
                     expiredSeatHolds.add(csh);
+                    seats[csh.getRowIndex()][csh.getColumnIndex()].setStatusFree();
                 }
             }
             customerSeatHolds.removeAll(expiredSeatHolds);

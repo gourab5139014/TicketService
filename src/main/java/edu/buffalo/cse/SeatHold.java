@@ -10,6 +10,7 @@ public class SeatHold {
     private int rowIndex;
     private int columnIndex;
     private int numberOfSeats;
+    private int seatHoldId;
 
     public SeatHold(long expireAfterSeconds, String customerEmail){
         this.expireAfterSeconds = expireAfterSeconds;
@@ -59,5 +60,13 @@ public class SeatHold {
 
     public void setCustomerEmail(String customerEmail) {
         this.customerEmail = customerEmail;
+    }
+
+    public int getSeatHoldId() {
+        return seatHoldId;
+    }
+
+    public void setSeatHoldId(int seatHoldId) {
+        this.seatHoldId = seatHoldId;
     }
 }
