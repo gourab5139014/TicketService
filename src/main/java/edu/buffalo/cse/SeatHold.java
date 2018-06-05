@@ -3,15 +3,17 @@ package edu.buffalo.cse;
 import java.time.Instant;
 
 public class SeatHold {
-    Instant heldAt;
-    String customerEmail;
-    long expireAfterSeconds;
-    int rowIndex;
-    int columnIndex;
-    int numberofSeats;
+    private Instant heldAt; // Not to be set from outside the class
 
-    public SeatHold(long expireAfterSeconds){
+    private String customerEmail;
+    private long expireAfterSeconds;
+    private int rowIndex;
+    private int columnIndex;
+    private int numberOfSeats;
+
+    public SeatHold(long expireAfterSeconds, String customerEmail){
         this.expireAfterSeconds = expireAfterSeconds;
+        this.customerEmail = customerEmail;
         this.heldAt = Instant.now();
     }
 
@@ -25,5 +27,37 @@ public class SeatHold {
 
     public Boolean isActive(){
         return Instant.now().minusSeconds(expireAfterSeconds).isBefore(this.heldAt) || Instant.now().minusSeconds(expireAfterSeconds).equals(this.heldAt);
+    }
+
+    public int getRowIndex() {
+        return rowIndex;
+    }
+
+    public void setRowIndex(int rowIndex) {
+        this.rowIndex = rowIndex;
+    }
+
+    public int getColumnIndex() {
+        return columnIndex;
+    }
+
+    public void setColumnIndex(int columnIndex) {
+        this.columnIndex = columnIndex;
+    }
+
+    public int getNumberOfSeats() {
+        return numberOfSeats;
+    }
+
+    public void setNumberOfSeats(int numberOfSeats) {
+        this.numberOfSeats = numberOfSeats;
+    }
+
+    public String getCustomerEmail() {
+        return customerEmail;
+    }
+
+    public void setCustomerEmail(String customerEmail) {
+        this.customerEmail = customerEmail;
     }
 }

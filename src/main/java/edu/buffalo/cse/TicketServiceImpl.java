@@ -6,11 +6,11 @@ public class TicketServiceImpl implements TicketService {
     private Venue v;
 
     public TicketServiceImpl(){
-        this("DefaultVenue", 100, 100);
+        this("DefaultVenue", 10, 10, 10);
     }
 
-    public TicketServiceImpl(String venueName, int rowsOfSeats, int columnsOfSeats){
-        v = new Venue(venueName, rowsOfSeats, columnsOfSeats);
+    public TicketServiceImpl(String venueName, int rowsOfSeats, int columnsOfSeats, int holdSeconds){
+        v = new Venue(venueName, rowsOfSeats, columnsOfSeats, holdSeconds);
     }
 
     @Override
@@ -20,8 +20,12 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public SeatHold findAndHoldSeats(int numSeats, String customerEmail) {
-        //TODO Introduce exceptions about VenueNotInitialized, SoldOut, numSeatsNotAvailableTogether, Validation of customerEmail
-        SeatHold sh = v.holdSeats(numSeats, customerEmail);
+        //TODO Introduce exceptions about VenueNotInitialized, SoldOut, NoContinuousSeats, Validation of customerEmail
+        try {
+            SeatHold sh = v.holdSeats(numSeats, customerEmail);
+        } catch (Exception e) {
+            e.printStackTrace(); //TODO Do custom exception
+        }
         return null;
     }
 

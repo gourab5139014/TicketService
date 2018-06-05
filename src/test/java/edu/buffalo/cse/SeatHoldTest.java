@@ -20,7 +20,7 @@ public class SeatHoldTest {
     @Test
     public void testSeatHoldExpired(){
         long secondsToLive = 3;
-        SeatHold sh = new SeatHold(secondsToLive);
+        SeatHold sh = new SeatHold(secondsToLive, "TestCustomer");
         synchronized (this) {
             try {
                 Thread.sleep((secondsToLive + 1) * 1000);
@@ -34,7 +34,7 @@ public class SeatHoldTest {
     @Test
     public void testSeatHoldNotExpired(){
         long secondsToLive = 3;
-        SeatHold sh = new SeatHold(secondsToLive);
+        SeatHold sh = new SeatHold(secondsToLive,"TestCustomer");
         synchronized (this){
             try {
                 Thread.sleep((secondsToLive-1)*1000);
