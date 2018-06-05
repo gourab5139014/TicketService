@@ -34,4 +34,60 @@ public class VenueTest {
         assertTrue(sh.getNumberOfSeats() == 2);
     }
 
+    @Test
+    public void testHoldSeats2GroupsOneRow() throws Exception {
+        int group1seats = 2;
+        int group2seats = 3;
+        Venue v = new Venue("TestVenue",5,5,10);
+        System.err.println(v);
+        SeatHold sh1 = v.holdSeats(group1seats,"TestCustomer1");
+        SeatHold sh2 = v.holdSeats(group2seats, "TestCustomer2");
+        System.err.println(v);
+        assertTrue(sh1.getRowIndex() == 0);
+        assertTrue(sh1.getColumnIndex() == 0);
+        assertTrue(sh1.getNumberOfSeats() == group1seats);
+        assertTrue(sh2.getRowIndex() == 0);
+        assertTrue(sh2.getColumnIndex() == 2);
+        assertTrue(sh2.getNumberOfSeats() == group2seats);
+    }
+
+    @Test
+    public void testHoldSeats2GroupsAdjacentRows() throws Exception {
+        int group1seats = 3;
+        int group2seats = 3;
+        Venue v = new Venue("TestVenue",5,5,10);
+        System.err.println(v);
+        SeatHold sh1 = v.holdSeats(group1seats,"TestCustomer1");
+        SeatHold sh2 = v.holdSeats(group2seats, "TestCustomer2");
+        System.err.println(v);
+        assertTrue(sh1.getRowIndex() == 0);
+        assertTrue(sh1.getColumnIndex() == 0);
+        assertTrue(sh1.getNumberOfSeats() == group1seats);
+        assertTrue(sh2.getRowIndex() == 1);
+        assertTrue(sh2.getColumnIndex() == 0);
+        assertTrue(sh2.getNumberOfSeats() == group2seats);
+    }
+
+    @Test(expected = Exception.class) //TODO Use custom exception
+    public void testHoldSeats1GroupTooBigForRow() throws Exception {
+        Venue v = new Venue("TestVenue",5,5,10);
+        SeatHold sh = v.holdSeats(6,"TestCustomer1");
+    }
+
+    @Test(expected = Exception.class) //TODO Use custom exception
+    public void testHoldSeats1GroupTooBigForVenue() throws Exception {
+        Venue v = new Venue("TestVenue",5,5,10);
+        SeatHold sh = v.holdSeats(26,"TestCustomer1");
+    }
+
+    @Test(expected = Exception.class) //TODO Use custom exception
+    public void testHoldSeats1GroupCantFitInBetween() throws Exception {
+        Venue v = new Venue("TestVenue",5,5,10);
+        v.holdSeats(2,"TestCustomer");
+        v.holdSeats(4,"TestCustomer");
+        v.holdSeats(5,"TestCustomer");
+        v.holdSeats(4,"TestCustomer");
+        v.holdSeats(4,"TestCustomer");
+        v.holdSeats(4,"TestCustomer");
+    }
 }
