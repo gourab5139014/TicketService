@@ -36,4 +36,10 @@ public class Seat {
     public Boolean isFree(){
         return this.status == SeatStatus.FREE;
     }
+    public Boolean isHold(){
+        return this.status == SeatStatus.HOLD;
+    }
+    public Boolean isBooked(){
+        return this.status == SeatStatus.BOOKED;
+    }
 }

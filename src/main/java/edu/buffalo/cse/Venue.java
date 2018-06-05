@@ -18,6 +18,8 @@ public class Venue {
 
     public Venue(String name, int rows, int columns, int secondsToHoldExpiry) {
         this.name = name;
+        this.rows = rows;
+        this.columns = columns;
         this.availableSeats = rows * columns;
         this.seats = new Seat[rows][columns];
         for(int i=0; i<rows;i++) {
@@ -70,19 +72,21 @@ public class Venue {
         for(i = 0; i < rows && !found; i++){
             for(j = 0; j < columns - numSeats + 1 && !found; j++){
                 if(seats[i][j].isFree()){// Find a starting point to start the search for numSeats continuous seats
+                    System.err.println("Started looking for seats at ("+i+","+j+")");
                     found = this.hasRemainingSeatsFreeInRow(i, j, numSeats-1); // Are next numSeats FREE ?
+
                 }
             }
         }
         //Prepare a SeatHold object to return
         if(found){
             sh = new SeatHold(secondsToHoldExpiry, customerEmail);
-            sh.setRowIndex(i);
-            sh.setColumnIndex(j);
+            sh.setRowIndex(i-1);
+            sh.setColumnIndex(j-1);
             sh.setNumberOfSeats(numSeats);
             // Change the status of seats[][]
             for(int k = 0; k < numSeats; k++){
-                seats[i][j+k].setStatusHold();
+                seats[i-1][j-1+k].setStatusHold();
             }
         } else{
             throw new Exception("No continuous seats found"); //TODO Custom exception for NoContinousSeatsFound
@@ -91,11 +95,12 @@ public class Venue {
     }
 
     private Boolean hasRemainingSeatsFreeInRow(int m, int n, int remainingSeats) {
-        Boolean r = false;
+        Boolean r = true;
         int count = remainingSeats;
         for(int j = n+1 ; j < columns && count > 0; j++)
         {
             r = r && this.seats[m][j].isFree();
+            System.err.println("Checking " + count +" remaining seat  at ("+m+","+j+") = "+this.seats[m][j].isFree());
             count--;
         }
         return r;
@@ -124,5 +129,24 @@ public class Venue {
             throw new Exception(customerEmail + " doesn't have a seathold already in  Venue "+name); //TODO Make a NoCustomerExists Exception
         }
 
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for(int i=0; i< rows; i++){
+            StringBuilder r = new StringBuilder();
+            for(int j=0;j<columns;j++){
+                if(seats[i][j].isFree())
+                    r.append("F");
+                else if(seats[i][j].isHold())
+                    r.append("H");
+                else
+                    r.append("B");
+            }
+            r.append(System.getProperty("line.separator"));
+            sb.append(r);
+        }
+        return sb.toString();
     }
 }
