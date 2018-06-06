@@ -90,6 +90,27 @@ public class VenueTest {
         v.holdSeats(4,"TestCustomer");
         v.holdSeats(4,"TestCustomer");
     }
+    
+    @Test
+    public void testHoldSeatsManyGroupsExpired() throws Exception {
+        int secondsToLive = 1;
+		Venue v = new Venue("TestVenue",5,5,secondsToLive );
+        v.holdSeats(2,"TestCustomer");
+        v.holdSeats(4,"TestCustomer");
+        v.holdSeats(5,"TestCustomer");
+        v.holdSeats(4,"TestCustomer");
+        v.holdSeats(4,"TestCustomer");
+        synchronized (this) {
+            try {
+                Thread.sleep((secondsToLive + 1) * 1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        SeatHold sh = v.holdSeats(4,"TestCustomer");
+        assertTrue(sh.getRowIndex()==0);
+        assertTrue(sh.getColumnIndex()==0);
+    }
 
     // TODO Test SeatHold expiry for a group of seats
 }
