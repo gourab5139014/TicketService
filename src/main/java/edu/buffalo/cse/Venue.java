@@ -41,6 +41,7 @@ public class Venue {
 
     public Boolean reserveSeats(int seatHoldId, String customerEmail) throws Exception {
         Boolean done = false;
+        this.cleanupExpiredSeatHolds();
         if(this.seatHolds.containsKey(customerEmail)){
             List<SeatHold> customerSeatHolds = this.seatHolds.get(customerEmail);
             List<SeatHold> removeSeatHolds = new ArrayList<>();
@@ -135,6 +136,7 @@ public class Venue {
     }
 
     public void cleanupExpiredSeatHolds(String customerEmail) throws Exception {
+        System.err.println("GC for seats of "+customerEmail);
         if(this.seatHolds.containsKey(customerEmail)){
             List<SeatHold> customerSeatHolds = this.seatHolds.get(customerEmail);
             List<SeatHold> expiredSeatHolds = new ArrayList<>(); //Cleanup for existing seatholds for the customer
@@ -147,7 +149,11 @@ public class Venue {
                 }
             }
             customerSeatHolds.removeAll(expiredSeatHolds);
-            this.seatHolds.put(customerEmail, customerSeatHolds);
+            if(customerSeatHolds.size()==0){ //Customer has no more seatholds
+                this.seatHolds.remove(customerEmail);
+            }else {
+                this.seatHolds.put(customerEmail, customerSeatHolds);
+            }
         }else{
             throw new Exception(customerEmail + " doesn't have a seathold already in  Venue "+name); //TODO Make a NoCustomerExists Exception
         }

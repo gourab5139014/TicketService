@@ -118,9 +118,24 @@ public class VenueTest {
     public void testHoldAndReserve1Group() throws Exception {
         Venue v = new Venue("TestVenue",5,5,5);
         SeatHold sh = v.holdSeats(2, "TestCustomer");
+        Boolean reserveStatus = v.reserveSeats(sh.getSeatHoldId(), "TestCustomer");
+        assertTrue(reserveStatus);
+    }
+
+    @Test(expected = Exception.class)
+    public void testHoldAndReserve1GroupExpired() throws Exception {
+        int secondsToLive = 1;
+        Venue v = new Venue("TestVenue",5,5,secondsToLive);
+        SeatHold sh = v.holdSeats(2, "TestCustomer");
         System.err.println(v);
+        synchronized (this) {
+            try {
+                Thread.sleep((secondsToLive + 1) * 1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         Boolean reserveStatus = v.reserveSeats(sh.getSeatHoldId(), "TestCustomer");
         System.err.println(v);
-        assertTrue(reserveStatus);
     }
 }
