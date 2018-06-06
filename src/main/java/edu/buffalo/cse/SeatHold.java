@@ -1,6 +1,7 @@
 package edu.buffalo.cse;
 
 import java.time.Instant;
+import java.util.Random;
 
 public class SeatHold {
     private Instant heldAt; // Not to be set from outside the class
@@ -16,6 +17,12 @@ public class SeatHold {
         this.expireAfterSeconds = expireAfterSeconds;
         this.customerEmail = customerEmail;
         this.heldAt = Instant.now();
+        this.seatHoldId = this.generateSeatHoldId(customerEmail);
+    }
+
+    private int generateSeatHoldId(String customerEmail) {
+        Random r = new Random();
+        return r.nextInt(customerEmail.length());
     }
 
     public String release(){

@@ -47,8 +47,9 @@ public class Venue {
             for(SeatHold csh:customerSeatHolds){
                 if(csh.getSeatHoldId() == seatHoldId && csh.isActive()){
                     for(int k = 0; k < csh.getNumberOfSeats(); k++){
-                        seats[csh.getRowIndex()][csh.getColumnIndex()].setStatusBooked();
+                        seats[csh.getRowIndex()][csh.getColumnIndex()+k].setStatusBooked();
                     }
+                    done = true;
                     removeSeatHolds.add(csh);
                     break;
                 }
@@ -63,6 +64,7 @@ public class Venue {
 
     public SeatHold holdSeats(int numSeats, String customerEmail) throws Exception {
         SeatHold sh;
+        this.cleanupExpiredSeatHolds(); //TODO Whacky idea!!!
         if(this.availableSeats >= numSeats){
             sh = this.holdContinuousSeats(numSeats, this.secondsToHoldExpiry, customerEmail);
 
@@ -139,7 +141,9 @@ public class Venue {
             for(SeatHold csh: customerSeatHolds){
                 if(!csh.isActive()) {
                     expiredSeatHolds.add(csh);
-                    seats[csh.getRowIndex()][csh.getColumnIndex()].setStatusFree();
+                    for(int j=0; j<csh.getNumberOfSeats();j++){
+                        seats[csh.getRowIndex()][csh.getColumnIndex()+j].setStatusFree();
+                    }
                 }
             }
             customerSeatHolds.removeAll(expiredSeatHolds);

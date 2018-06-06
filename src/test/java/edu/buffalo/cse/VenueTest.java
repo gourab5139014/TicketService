@@ -107,10 +107,20 @@ public class VenueTest {
                 e.printStackTrace();
             }
         }
+        System.err.println(v);
         SeatHold sh = v.holdSeats(4,"TestCustomer");
         assertTrue(sh.getRowIndex()==0);
         assertTrue(sh.getColumnIndex()==0);
+        assertTrue(sh.getNumberOfSeats()==4);
     }
 
-    // TODO Test SeatHold expiry for a group of seats
+    @Test
+    public void testHoldAndReserve1Group() throws Exception {
+        Venue v = new Venue("TestVenue",5,5,5);
+        SeatHold sh = v.holdSeats(2, "TestCustomer");
+        System.err.println(v);
+        Boolean reserveStatus = v.reserveSeats(sh.getSeatHoldId(), "TestCustomer");
+        System.err.println(v);
+        assertTrue(reserveStatus);
+    }
 }
