@@ -54,7 +54,7 @@ public class SeatHold {
     }
 
     public int getNumberOfSeats() {
-        return numberOfSeats;
+        return this.numberOfSeats;
     }
 
     public void setNumberOfSeats(int numberOfSeats) {

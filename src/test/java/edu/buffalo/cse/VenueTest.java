@@ -4,6 +4,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class VenueTest {
@@ -32,6 +33,18 @@ public class VenueTest {
         assertTrue(sh.getRowIndex() == 0);
         assertTrue(sh.getColumnIndex() == 0);
         assertTrue(sh.getNumberOfSeats() == 2);
+    }
+
+    @Test
+    public void testHoldSeats1GroupAndSeatsAvailable() throws Exception {
+        Venue v = new Venue("TestVenue",5,5,10);
+        System.err.println(v);
+        SeatHold sh = v.holdSeats(2,"TestCustomer1");
+        System.err.println(v);
+        assertTrue(sh.getRowIndex() == 0);
+        assertTrue(sh.getColumnIndex() == 0);
+        assertTrue(sh.getNumberOfSeats() == 2);
+        assertEquals(23, v.getAvailableSeats());
     }
 
     @Test
@@ -95,6 +108,38 @@ public class VenueTest {
     public void testHoldSeatsManyGroupsExpired() throws Exception {
         int secondsToLive = 1;
 		Venue v = new Venue("TestVenue",5,5,secondsToLive );
+        assertEquals(25, v.getAvailableSeats());
+        v.holdSeats(2,"TestCustomer");
+        assertEquals(23, v.getAvailableSeats());
+        v.holdSeats(4,"TestCustomer");
+        assertEquals(19, v.getAvailableSeats());
+        v.holdSeats(5,"TestCustomer");
+        assertEquals(14, v.getAvailableSeats());
+        v.holdSeats(4,"TestCustomer");
+        assertEquals(10, v.getAvailableSeats());
+        v.holdSeats(4,"TestCustomer");
+        assertEquals(6, v.getAvailableSeats());
+        System.err.println(v);
+        synchronized (this) {
+            try {
+                System.err.println("Sleeping for "+(secondsToLive + 1)+" secs");
+                Thread.sleep((secondsToLive + 1) * 1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        SeatHold sh = v.holdSeats(4,"TestCustomer");
+        System.err.println(v);
+        assertTrue(sh.getRowIndex()==0);
+        assertTrue(sh.getColumnIndex()==0);
+        assertTrue(sh.getNumberOfSeats()==4);
+        assertEquals(21, v.getAvailableSeats());
+    }
+
+    @Test
+    public void testHoldSeatsManyGroupsExpiredAndAvailableSeats() throws Exception {
+        int secondsToLive = 1;
+        Venue v = new Venue("TestVenue",5,5,secondsToLive );
         v.holdSeats(2,"TestCustomer");
         v.holdSeats(4,"TestCustomer");
         v.holdSeats(5,"TestCustomer");

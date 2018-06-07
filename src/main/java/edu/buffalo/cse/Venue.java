@@ -32,6 +32,14 @@ public class Venue {
     }
 
     public int getAvailableSeats() {
+        int seatsAvailable = 0;
+        for(int i=0; i<rows;i++) {
+            for (int j = 0; j < columns; j++) {
+                if(this.seats[i][j].isFree())
+                    seatsAvailable++;
+            }
+        }
+        this.availableSeats = seatsAvailable;
         return this.availableSeats;
     }
 
