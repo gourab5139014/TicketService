@@ -190,13 +190,6 @@ public class VenueTest {
         SeatHold sh = v.holdSeats(2, "TestCustomer");
         assertEquals(23, v.getAvailableSeats());
         Boolean reserveStatus = v.reserveSeats(sh.getSeatHoldId(), "TestCustomer");
-//        synchronized (this) {
-//            try {
-//                Thread.sleep((secondsToLive + 1) * 1000);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//        }
         assertEquals(23, v.getAvailableSeats());
         String currentVenueStatus = v.toString();
         assertEquals('B', currentVenueStatus.charAt(0));
