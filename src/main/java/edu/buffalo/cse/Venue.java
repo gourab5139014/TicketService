@@ -1,6 +1,11 @@
 package edu.buffalo.cse;
 
 
+import edu.buffalo.cse.exceptions.InvalidCustomerException;
+import edu.buffalo.cse.exceptions.InvalidSeatholdException;
+import edu.buffalo.cse.exceptions.NoContinuousSeatsAvailableException;
+import edu.buffalo.cse.exceptions.VenueFullException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -47,7 +52,7 @@ public class Venue {
         return this.getAvailableSeats() > 0;
     }
 
-    public Boolean reserveSeats(int seatHoldId, String customerEmail) throws Exception {
+    public Boolean reserveSeats(int seatHoldId, String customerEmail) throws InvalidSeatholdException, InvalidCustomerException {
         Boolean done = false;
         this.cleanupExpiredSeatHolds();
         if(this.seatHolds.containsKey(customerEmail)){
@@ -66,16 +71,18 @@ public class Venue {
             customerSeatHolds.removeAll(removeSeatHolds);
 
         }else{
-            throw new Exception(customerEmail + " doesn't have a seathold already in  Venue "+name); //TODO Make a NoCustomerExists Exception
+//            throw new Exception(customerEmail + " doesn't have a seathold already in  Venue "+name);
+            throw new InvalidCustomerException(customerEmail + " doesn't have a seathold already in  Venue "+name);
         }
         if(!done)
-        	throw new Exception("Invalid seatHold Id "+seatHoldId); //TODO Make a custom exception InvalidSeatHold Id
+//        	throw new Exception("Invalid seatHold Id "+seatHoldId);
+            throw new InvalidSeatholdException("Invalid seatHold Id "+seatHoldId);
         return done;
     }
 
-    public SeatHold holdSeats(int numSeats, String customerEmail) throws Exception {
+    public SeatHold holdSeats(int numSeats, String customerEmail) throws VenueFullException, NoContinuousSeatsAvailableException, InvalidCustomerException {
         SeatHold sh;
-        this.cleanupExpiredSeatHolds(); //TODO Whacky idea!!!
+        this.cleanupExpiredSeatHolds();
         if(this.availableSeats >= numSeats){
             sh = this.holdContinuousSeats(numSeats, this.secondsToHoldExpiry, customerEmail);
 
@@ -90,12 +97,13 @@ public class Venue {
             this.seatHolds.put(customerEmail, customerSeatHolds);
 
         } else{
-            throw new Exception(numSeats + " seat can not be allocated in Venue "+name); //TODO Make a custom exception
+//            throw new Exception(numSeats + " seat can not be allocated in Venue "+name);
+            throw new VenueFullException(numSeats + " seat can not be allocated in Venue "+name);
         }
         return sh;
     }
 
-    private SeatHold holdContinuousSeats(int numSeats, long secondsToHoldExpiry, String customerEmail) throws Exception {
+    private SeatHold holdContinuousSeats(int numSeats, long secondsToHoldExpiry, String customerEmail) throws NoContinuousSeatsAvailableException {
         // Iterate through the array. Prune iteration based on numSeats requested seats
         SeatHold sh = null;
         boolean found = false;
@@ -120,7 +128,8 @@ public class Venue {
                 seats[i-1][j-1+k].setStatusHold();
             }
         } else{
-            throw new Exception("No continuous seats found"); //TODO Custom exception for NoContinousSeatsFound
+//            throw new Exception("No continuous seats found");
+            throw new NoContinuousSeatsAvailableException("No continuous seats found");
         }
         return sh;
     }
@@ -137,15 +146,14 @@ public class Venue {
         return r;
     }
 
-    public void cleanupExpiredSeatHolds() throws Exception
+    public void cleanupExpiredSeatHolds() throws InvalidCustomerException
     {
-        //TODO Make a NoCustomerExists Exception
         for(String customerEmail : this.seatHolds.keySet()){
             this.cleanupExpiredSeatHolds(customerEmail);
         }
     }
 
-    public void cleanupExpiredSeatHolds(String customerEmail) throws Exception {
+    public void cleanupExpiredSeatHolds(String customerEmail) throws InvalidCustomerException {
         System.err.println("GC for seats of "+customerEmail);
         if(this.seatHolds.containsKey(customerEmail)){
             List<SeatHold> customerSeatHolds = this.seatHolds.get(customerEmail);
@@ -165,7 +173,8 @@ public class Venue {
                 this.seatHolds.put(customerEmail, customerSeatHolds);
             }
         }else{
-            throw new Exception(customerEmail + " doesn't have a seathold already in  Venue "+name); //TODO Make a NoCustomerExists Exception
+//            throw new Exception(customerEmail + " doesn't have a seathold already in  Venue "+name);
+            throw new InvalidCustomerException(customerEmail + " doesn't have a seathold already in  Venue "+name);
         }
 
     }

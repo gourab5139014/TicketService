@@ -6,21 +6,15 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.buffalo.cse.exceptions.InvalidCustomerException;
+import edu.buffalo.cse.exceptions.InvalidSeatholdException;
+import edu.buffalo.cse.exceptions.NoContinuousSeatsAvailableException;
+import edu.buffalo.cse.exceptions.VenueFullException;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class TicketServiceTest {
-
-    @BeforeClass
-    public static void setup(){
-
-    }
-
-    @AfterClass
-    public static void teardown(){
-
-    }
 
     @Test
     public void testConfirmationCodeLength(){
@@ -54,9 +48,8 @@ public class TicketServiceTest {
     	}
     }
     
-    @Test(expected = Exception.class)
-    public void testHoldSeatsBookedException() throws Exception
-    {
+    @Test(expected = NoContinuousSeatsAvailableException.class)
+    public void testHoldSeatsBookedException() throws InvalidCustomerException, VenueFullException, NoContinuousSeatsAvailableException {
     	TicketServiceImpl ts = new TicketServiceImpl("testHoldSeats Venue",5,5,2);
     	List<SeatHold> shl = new ArrayList<>();
     	for(int i = 0; i<16;i++){
@@ -75,9 +68,8 @@ public class TicketServiceTest {
     	assertTrue(confirmationCode.length() > 1);
     }
     
-    @Test(expected = Exception.class)
-    public void testHoldReserveSeats1Group1CustomerExpired() throws Exception
-    {
+    @Test(expected = InvalidCustomerException.class)
+    public void testHoldReserveSeats1Group1CustomerExpired() throws InvalidCustomerException, VenueFullException, NoContinuousSeatsAvailableException, InvalidSeatholdException {
     	int timeToLive = 1;
     	TicketServiceImpl ts = new TicketServiceImpl("testHoldReserveSeats1Customer Venue",5,5,timeToLive);
     	SeatHold sh = ts.findAndHoldSeats(2, "testHoldReserveSeats1Customer Customer");
@@ -94,27 +86,19 @@ public class TicketServiceTest {
     	assertTrue(confirmationCode.length() > 1);
     }
     
-    @Test(expected = Exception.class) //TODO Custom InvalidSeatHoldId Exception
-    public void testHoldReserveSeats1Group1CustomerInvalidSeatHold() throws Exception
-    {
+    @Test(expected = InvalidSeatholdException.class)
+    public void testHoldReserveSeats1Group1CustomerInvalidSeatHold() throws InvalidSeatholdException, InvalidCustomerException, VenueFullException, NoContinuousSeatsAvailableException {
     	TicketServiceImpl ts = new TicketServiceImpl("testHoldReserveSeats1Customer Venue",5,5,2);
     	SeatHold sh = ts.findAndHoldSeats(2, "testHoldReserveSeats1Customer Customer");
     	System.err.println(sh.getSeatHoldId());
     	String confirmationCode = ts.reserveSeats(1234, "testHoldReserveSeats1Customer Customer");
-//    	assertEquals(0, sh.getRowIndex());
-//    	assertEquals(0, sh.getColumnIndex());
-//    	assertTrue(confirmationCode.length() > 1);
     }
     
-    @Test(expected = Exception.class) //TODO Custom InvalidCustomer Exception
-    public void testHoldReserveSeats1Group1CustomerInvalidCustomer() throws Exception
-    {
+    @Test(expected = InvalidCustomerException.class)
+    public void testHoldReserveSeats1Group1CustomerInvalidCustomer() throws InvalidCustomerException, VenueFullException, NoContinuousSeatsAvailableException, InvalidSeatholdException {
     	TicketServiceImpl ts = new TicketServiceImpl("testHoldReserveSeats1Customer Venue",5,5,2);
     	SeatHold sh = ts.findAndHoldSeats(2, "testHoldReserveSeats1Customer Customer");
     	String confirmationCode = ts.reserveSeats(sh.getSeatHoldId(), "InvalidCustomerId");
-//    	assertEquals(0, sh.getRowIndex());
-//    	assertEquals(0, sh.getColumnIndex());
-//    	assertTrue(confirmationCode.length() > 1);
     }
     
     @Test

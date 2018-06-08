@@ -1,5 +1,11 @@
 package edu.buffalo.cse;
 
+import edu.buffalo.cse.exceptions.InvalidCustomerException;
+import edu.buffalo.cse.exceptions.InvalidSeatholdException;
+import edu.buffalo.cse.exceptions.NoContinuousSeatsAvailableException;
+import edu.buffalo.cse.exceptions.VenueFullException;
+import org.omg.CORBA.DynAnyPackage.Invalid;
+
 import java.util.Random;
 
 public class TicketServiceImpl implements TicketService {
@@ -19,15 +25,15 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public SeatHold findAndHoldSeats(int numSeats, String customerEmail) throws Exception {
-        //TODO Introduce exceptions about VenueNotInitialized, SoldOut, NoContinuousSeats, Validation of customerEmail
+    public SeatHold findAndHoldSeats(int numSeats, String customerEmail) throws InvalidCustomerException, VenueFullException, NoContinuousSeatsAvailableException {
+        //TODO Introduce exceptions about Validation of customerEmail
         SeatHold sh = null;
         sh = v.holdSeats(numSeats, customerEmail);
         return sh;
     }
 
     @Override
-    public String reserveSeats(int seatHoldId, String customerEmail) throws Exception{
+    public String reserveSeats(int seatHoldId, String customerEmail) throws InvalidSeatholdException, InvalidCustomerException {
 
         String confirmationCode = "";
         Boolean success = v.reserveSeats(seatHoldId, customerEmail);

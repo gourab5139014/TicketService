@@ -1,5 +1,9 @@
 package edu.buffalo.cse;
 
+import edu.buffalo.cse.exceptions.InvalidCustomerException;
+import edu.buffalo.cse.exceptions.InvalidSeatholdException;
+import edu.buffalo.cse.exceptions.NoContinuousSeatsAvailableException;
+import edu.buffalo.cse.exceptions.VenueFullException;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -81,20 +85,20 @@ public class VenueTest {
         assertTrue(sh2.getNumberOfSeats() == group2seats);
     }
 
-    @Test(expected = Exception.class) //TODO Use custom exception
-    public void testHoldSeats1GroupTooBigForRow() throws Exception {
+    @Test(expected = NoContinuousSeatsAvailableException.class)
+    public void testHoldSeats1GroupTooBigForRow() throws NoContinuousSeatsAvailableException, VenueFullException, InvalidCustomerException {
         Venue v = new Venue("TestVenue",5,5,10);
         SeatHold sh = v.holdSeats(6,"TestCustomer1");
     }
 
-    @Test(expected = Exception.class) //TODO Use custom exception
-    public void testHoldSeats1GroupTooBigForVenue() throws Exception {
+    @Test(expected = VenueFullException.class)
+    public void testHoldSeats1GroupTooBigForVenue() throws InvalidCustomerException, VenueFullException, NoContinuousSeatsAvailableException {
         Venue v = new Venue("TestVenue",5,5,10);
         SeatHold sh = v.holdSeats(26,"TestCustomer1");
     }
 
-    @Test(expected = Exception.class) //TODO Use custom exception
-    public void testHoldSeats1GroupCantFitInBetween() throws Exception {
+    @Test(expected = NoContinuousSeatsAvailableException.class)
+    public void testHoldSeats1GroupCantFitInBetween() throws InvalidCustomerException, VenueFullException, NoContinuousSeatsAvailableException {
         Venue v = new Venue("TestVenue",5,5,10);
         v.holdSeats(2,"TestCustomer");
         v.holdSeats(4,"TestCustomer");
@@ -105,7 +109,7 @@ public class VenueTest {
     }
     
     @Test
-    public void testHoldSeatsManyGroupsExpired() throws Exception {
+    public void testHoldSeatsManyGroupsExpired() throws InvalidCustomerException, VenueFullException, NoContinuousSeatsAvailableException {
         int secondsToLive = 1;
 		Venue v = new Venue("TestVenue",5,5,secondsToLive );
         assertEquals(25, v.getAvailableSeats());
@@ -137,7 +141,7 @@ public class VenueTest {
     }
 
     @Test
-    public void testHoldSeatsManyGroupsExpiredAndAvailableSeats() throws Exception {
+    public void testHoldSeatsManyGroupsExpiredAndAvailableSeats() throws InvalidCustomerException, VenueFullException, NoContinuousSeatsAvailableException {
         int secondsToLive = 1;
         Venue v = new Venue("TestVenue",5,5,secondsToLive );
         v.holdSeats(2,"TestCustomer");
@@ -160,15 +164,15 @@ public class VenueTest {
     }
 
     @Test
-    public void testHoldAndReserve1Group() throws Exception {
+    public void testHoldAndReserve1Group() throws InvalidSeatholdException, InvalidCustomerException, VenueFullException, NoContinuousSeatsAvailableException {
         Venue v = new Venue("TestVenue",5,5,5);
         SeatHold sh = v.holdSeats(2, "TestCustomer");
         Boolean reserveStatus = v.reserveSeats(sh.getSeatHoldId(), "TestCustomer");
         assertTrue(reserveStatus);
     }
 
-    @Test(expected = Exception.class)
-    public void testHoldAndReserve1GroupExpired() throws Exception {
+    @Test(expected = InvalidCustomerException.class)
+    public void testHoldAndReserve1GroupExpired() throws InvalidSeatholdException, InvalidCustomerException, VenueFullException, NoContinuousSeatsAvailableException {
         int secondsToLive = 1;
         Venue v = new Venue("TestVenue",5,5,secondsToLive);
         SeatHold sh = v.holdSeats(2, "TestCustomer");
@@ -184,7 +188,7 @@ public class VenueTest {
     }
 
     @Test()
-    public void testHoldAndReserve1GroupExpiredAvailableSeats() throws Exception {
+    public void testHoldAndReserve1GroupExpiredAvailableSeats() throws InvalidSeatholdException, InvalidCustomerException, VenueFullException, NoContinuousSeatsAvailableException {
         int secondsToLive = 1;
         Venue v = new Venue("TestVenue",5,5,secondsToLive);
         SeatHold sh = v.holdSeats(2, "TestCustomer");
