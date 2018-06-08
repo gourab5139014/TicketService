@@ -15,7 +15,7 @@ public interface TicketService {
      * @return a SeatHold object identifying the specific seats and related
     information
      */
-    SeatHold findAndHoldSeats(int numSeats, String customerEmail);
+    SeatHold findAndHoldSeats(int numSeats, String customerEmail) throws Exception;
     /**
      * Commit seats held for a specific customer
      *
@@ -24,5 +24,5 @@ public interface TicketService {
     seat hold is assigned
      * @return a reservation confirmation code
      */
-    String reserveSeats(int seatHoldId, String customerEmail);
+    String reserveSeats(int seatHoldId, String customerEmail) throws Exception;
 }

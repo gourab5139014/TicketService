@@ -68,6 +68,8 @@ public class Venue {
         }else{
             throw new Exception(customerEmail + " doesn't have a seathold already in  Venue "+name); //TODO Make a NoCustomerExists Exception
         }
+        if(!done)
+        	throw new Exception("Invalid seatHold Id "+seatHoldId); //TODO Make a custom exception InvalidSeatHold Id
         return done;
     }
 
